@@ -1,0 +1,11 @@
+[User]1 Has ▶++-1[Inventory]
+[Inventory]0..* Contains ▶+-0..*[Ingredient]
+[Recipe]0..* Requires ▶+-1..*[Ingredient]
+[User]0..* Liked ▶-0..*[Recipe]
+
+[User]1 Created ▶+-0..*[Recipe]
+
+[SearchQuery]0..* Filter by ▶-0..*[Ingredient]
+
+[SearchResult]-.-◀ Produces[SearchQuery]
+[SearchResult]0..* Found ▶-0..*[Recipe]
