@@ -23,13 +23,4 @@ public class TestClassTests {
         }
     }
 
-    @Test
-    public void testAddFail() {
-        for(int a = -10; a < 11; a++) {
-            for(int b = -10; b < 11; b++) {
-                assertEquals(a + b + 5, testClass.add(a, b));
-            }
-        }
-    }
-
 }
