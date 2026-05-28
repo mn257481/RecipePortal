@@ -1,15 +1,15 @@
-package com.tests;
+package com.recipeportal;
 
-import com.recipeportal.TestClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestClassTests {
 
     TestClass testClass;
 
-    @Before
+    @BeforeEach
     public void initializeTestClassForEachTest() {
         testClass = new TestClass();
     }
@@ -18,7 +18,7 @@ public class TestClassTests {
     public void testAddSuccess() {
         for(int a = -10; a < 11; a++) {
             for(int b = -10; b < 11; b++) {
-                Assert.assertEquals(a + b, testClass.add(a, b));
+                assertEquals(a + b, testClass.add(a, b));
             }
         }
     }
@@ -27,7 +27,7 @@ public class TestClassTests {
     public void testAddFail() {
         for(int a = -10; a < 11; a++) {
             for(int b = -10; b < 11; b++) {
-                Assert.assertEquals(a + b + 5, testClass.add(a, b));
+                assertEquals(a + b + 5, testClass.add(a, b));
             }
         }
     }
