@@ -9,7 +9,7 @@ import java.util.List;
 public class Prescription {
 
     private final List<Integer> ratings = new ArrayList<>();
-    private final String name;
+    private String name;
     private final Map<String, Double> ingredients = new HashMap<>();
 
     public Prescription(String name) {
@@ -61,5 +61,33 @@ public class Prescription {
 
     public int getNumberOfRatings() {
         return ratings.size();
+    }
+
+    public void setName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Prescription name cannot be empty.");
+        }
+
+        this.name = name;
+    }
+
+    public void updateIngredient(String ingredientName, double quantity) {
+        if (!ingredients.containsKey(ingredientName)) {
+            throw new IllegalArgumentException("Ingredient not found.");
+        }
+
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive.");
+        }
+
+        ingredients.put(ingredientName, quantity);
+    }
+
+    public void removeIngredient(String ingredientName) {
+        if (!ingredients.containsKey(ingredientName)) {
+            throw new IllegalArgumentException("Ingredient not found.");
+        }
+
+        ingredients.remove(ingredientName);
     }
 }
