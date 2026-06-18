@@ -27,4 +27,12 @@ public class PrescriptionManager {
     public boolean containsPrescription(String name) {
         return prescriptions.containsKey(name);
     }
+
+    public void deletePrescription(String name) {
+        if (!prescriptions.containsKey(name)) {
+            throw new IllegalArgumentException("Prescription not found.");
+        }
+
+        prescriptions.remove(name);
+    }
 }
