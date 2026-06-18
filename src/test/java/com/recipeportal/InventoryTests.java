@@ -38,4 +38,61 @@ public class InventoryTests {
         assertThrows(IllegalArgumentException.class,
                 () -> inventory.addIngredient("Aspirin", 1.0, "ml"));
     }
+
+    @Test
+    void shouldRemovePartOfIngredientQuantity() {
+        Inventory inventory = new Inventory();
+
+        inventory.addIngredient("Paracetamol", 20, "tablets");
+
+        inventory.removeIngredient("Paracetamol", 5);
+
+        assertEquals(15,
+                inventory.getIngredient("Paracetamol").getQuantity(), 0.001);
+    }
+
+    @Test
+    void shouldRemoveIngredientWhenQuantityReachesZero() {
+        Inventory inventory = new Inventory();
+
+        inventory.addIngredient("Ibuprofen", 10, "capsules");
+
+        inventory.removeIngredient("Ibuprofen", 10);
+
+        assertFalse(inventory.containsIngredient("Ibuprofen"));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenIngredientDoesNotExist() {
+        Inventory inventory = new Inventory();
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> inventory.removeIngredient("Aspirin", 1)
+        );
+    }
+
+    @Test
+    void shouldThrowExceptionWhenRemovingMoreThanAvailable() {
+        Inventory inventory = new Inventory();
+
+        inventory.addIngredient("Vitamin C", 5, "tablets");
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> inventory.removeIngredient("Vitamin C", 10)
+        );
+    }
+
+    @Test
+    void shouldThrowExceptionWhenRemovingNegativeQuantity() {
+        Inventory inventory = new Inventory();
+
+        inventory.addIngredient("Magnesium", 10, "capsules");
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> inventory.removeIngredient("Magnesium", -2)
+        );
+    }
 }
