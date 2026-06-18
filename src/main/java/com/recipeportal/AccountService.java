@@ -2,6 +2,16 @@ package com.recipeportal;
 
 public class AccountService {
 
+    public boolean createAccount(String email, String password) {
+        if (email == null || password == null) {
+            return false;
+        }
+        if (password.length() < 8) {
+            return false;
+        }
+        return true;
+    }
+
     public boolean updateProfilePicture(Account account, String pictureUrl) {
         if (account == null || pictureUrl == null) {
             return false;
