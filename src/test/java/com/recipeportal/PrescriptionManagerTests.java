@@ -61,4 +61,67 @@ class PrescriptionManagerTests {
                 () -> manager.createPrescription("Cold")
         );
     }
+
+    @Test
+    void shouldDeletePrescription() {
+        PrescriptionManager manager = new PrescriptionManager();
+
+        manager.createPrescription("Antibiotic");
+
+        assertTrue(manager.containsPrescription("Antibiotic"));
+
+        manager.deletePrescription("Antibiotic");
+
+        assertFalse(manager.containsPrescription("Antibiotic"));
+    }
+
+    @Test
+    void shouldDecreasePrescriptionCountAfterDeletion() {
+        PrescriptionManager manager = new PrescriptionManager();
+
+        manager.createPrescription("Cold");
+        manager.createPrescription("Flu");
+
+        assertEquals(2, manager.getAllPrescriptions().size());
+
+        manager.deletePrescription("Cold");
+
+        assertEquals(1, manager.getAllPrescriptions().size());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenDeletingUnknownPrescription() {
+        PrescriptionManager manager = new PrescriptionManager();
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> manager.deletePrescription("Unknown")
+        );
+    }
+
+    @Test
+    void shouldAllowCreatingPrescriptionAgainAfterDeletion() {
+        PrescriptionManager manager = new PrescriptionManager();
+
+        manager.createPrescription("Painkiller");
+        manager.deletePrescription("Painkiller");
+        manager.createPrescription("Painkiller");
+
+        assertTrue(manager.containsPrescription("Painkiller"));
+    }
+
+    @Test
+    void shouldDeleteOnlySelectedPrescription() {
+        PrescriptionManager manager = new PrescriptionManager();
+
+        manager.createPrescription("A");
+        manager.createPrescription("B");
+        manager.createPrescription("C");
+
+        manager.deletePrescription("B");
+
+        assertTrue(manager.containsPrescription("A"));
+        assertFalse(manager.containsPrescription("B"));
+        assertTrue(manager.containsPrescription("C"));
+    }
 }
