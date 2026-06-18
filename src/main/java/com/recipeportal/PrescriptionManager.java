@@ -3,8 +3,10 @@ package com.recipeportal;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-public class PrescriptionManager {
+public class PrescriptionManager  implements PrescriptionSearch{
 
     private final Map<String, Prescription> prescriptions = new HashMap<>();
 
@@ -99,5 +101,36 @@ public class PrescriptionManager {
                     entry.getValue()
             );
         }
+    }
+
+    public List<Prescription> search(SearchCriteria criteria) {
+
+        List<Prescription> result = new ArrayList<>();
+
+        for (Prescription prescription : prescriptions.values()) {
+
+            boolean matches = true;
+
+            if (criteria.getName() != null &&
+                    !prescription.getName()
+                            .toLowerCase()
+                            .contains(criteria.getName().toLowerCase())) {
+
+                matches = false;
+            }
+
+            if (criteria.getIngredient() != null &&
+                    !prescription.getIngredients()
+                            .containsKey(criteria.getIngredient())) {
+
+                matches = false;
+            }
+
+            if (matches) {
+                result.add(prescription);
+            }
+        }
+
+        return result;
     }
 }
