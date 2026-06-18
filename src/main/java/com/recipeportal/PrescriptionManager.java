@@ -52,4 +52,24 @@ public class PrescriptionManager {
 
         prescriptions.put(newName, prescription);
     }
+
+    public void favoritePrescription(String name) {
+        Prescription prescription = prescriptions.get(name);
+
+        if (prescription == null) {
+            throw new IllegalArgumentException("Prescription not found.");
+        }
+
+        prescription.markAsFavorite();
+    }
+
+    public void unfavoritePrescription(String name) {
+        Prescription prescription = prescriptions.get(name);
+
+        if (prescription == null) {
+            throw new IllegalArgumentException("Prescription not found.");
+        }
+
+        prescription.removeFromFavorites();
+    }
 }
