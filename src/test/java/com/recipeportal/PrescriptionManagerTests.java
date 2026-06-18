@@ -324,4 +324,114 @@ class PrescriptionManagerTests {
         assertTrue(prescription.isFavorite());
         assertEquals(5.0, prescription.getAverageRating(), 0.001);
     }
+
+    @Test
+    void shouldFulfillPrescription() {
+
+        Inventory inventory = new Inventory();
+
+        inventory.addIngredient("Paracetamol", 10, "tablets");
+        inventory.addIngredient("Vitamin C", 5, "tablets");
+
+        PrescriptionManager manager = new PrescriptionManager();
+
+        manager.createPrescription("Cold");
+
+        Prescription prescription =
+                manager.getPrescription("Cold");
+
+        prescription.addIngredient("Paracetamol", 2);
+        prescription.addIngredient("Vitamin C", 1);
+
+        manager.fulfillPrescription("Cold", inventory);
+
+        assertEquals(
+                8,
+                inventory.getIngredient("Paracetamol").getQuantity()
+        );
+
+        assertEquals(
+                4,
+                inventory.getIngredient("Vitamin C").getQuantity()
+        );
+    }
+
+    @Test
+    void shouldThrowExceptionWhenInventoryDoesNotContainMedicine() {
+
+        Inventory inventory = new Inventory();
+
+        PrescriptionManager manager = new PrescriptionManager();
+
+        manager.createPrescription("Cold");
+
+        manager.getPrescription("Cold")
+                .addIngredient("Ibuprofen", 2);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> manager.fulfillPrescription("Cold", inventory)
+        );
+    }
+
+    @Test
+    void shouldThrowExceptionWhenInventoryHasTooLittleMedicine() {
+
+        Inventory inventory = new Inventory();
+
+        inventory.addIngredient("Ibuprofen", 1, "tablets");
+
+        PrescriptionManager manager = new PrescriptionManager();
+
+        manager.createPrescription("Pain");
+
+        manager.getPrescription("Pain")
+                .addIngredient("Ibuprofen", 3);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> manager.fulfillPrescription("Pain", inventory)
+        );
+    }
+
+    @Test
+    void shouldRemoveMedicineCompletelyWhenInventoryBecomesEmpty() {
+
+        Inventory inventory = new Inventory();
+
+        inventory.addIngredient("Aspirin", 2, "tablets");
+
+        PrescriptionManager manager = new PrescriptionManager();
+
+        manager.createPrescription("Heart");
+
+        manager.getPrescription("Heart")
+                .addIngredient("Aspirin", 2);
+
+        manager.fulfillPrescription("Heart", inventory);
+
+        assertFalse(
+                inventory.containsIngredient("Aspirin")
+        );
+    }
+
+    @Test
+    void shouldNotChangeInventoryWhenPrescriptionDoesNotExist() {
+
+        Inventory inventory = new Inventory();
+
+        inventory.addIngredient("Vitamin C", 10, "tablets");
+
+        PrescriptionManager manager = new PrescriptionManager();
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> manager.fulfillPrescription("Unknown", inventory)
+        );
+
+        assertEquals(
+                10,
+                inventory.getIngredient("Vitamin C").getQuantity()
+        );
+    }
 }
