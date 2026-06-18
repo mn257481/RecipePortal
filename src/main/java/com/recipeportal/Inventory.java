@@ -9,11 +9,19 @@ public class Inventory {
     private final Map<String, Ingredient> ingredients = new HashMap<>();
 
     public void addIngredient(String name, double quantity, String unit) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive.");
+        }
+
         Ingredient ingredient = ingredients.get(name);
 
         if (ingredient == null) {
             ingredients.put(name, new Ingredient(name, quantity, unit));
         } else {
+            if (!ingredient.getUnit().equals(unit)) {
+                throw new IllegalArgumentException("Unit mismatch.");
+            }
+
             ingredient.addQuantity(quantity);
         }
     }
