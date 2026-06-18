@@ -72,4 +72,32 @@ public class PrescriptionManager {
 
         prescription.removeFromFavorites();
     }
+
+    public void fulfillPrescription(String name, Inventory inventory) {
+
+        Prescription prescription = prescriptions.get(name);
+
+        if (prescription == null) {
+            throw new IllegalArgumentException("Prescription not found.");
+        }
+
+        for (var entry : prescription.getIngredients().entrySet()) {
+
+            Ingredient ingredient = inventory.getIngredient(entry.getKey());
+
+            if (ingredient == null ||
+                    ingredient.getQuantity() < entry.getValue()) {
+                throw new IllegalArgumentException(
+                        "Not enough " + entry.getKey() + " in inventory."
+                );
+            }
+        }
+
+        for (var entry : prescription.getIngredients().entrySet()) {
+            inventory.removeIngredient(
+                    entry.getKey(),
+                    entry.getValue()
+            );
+        }
+    }
 }
