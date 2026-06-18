@@ -35,4 +35,21 @@ public class PrescriptionManager {
 
         prescriptions.remove(name);
     }
+
+    public void renamePrescription(String oldName, String newName) {
+
+        if (!prescriptions.containsKey(oldName)) {
+            throw new IllegalArgumentException("Prescription not found.");
+        }
+
+        if (prescriptions.containsKey(newName)) {
+            throw new IllegalArgumentException("Prescription already exists.");
+        }
+
+        Prescription prescription = prescriptions.remove(oldName);
+
+        prescription.setName(newName);
+
+        prescriptions.put(newName, prescription);
+    }
 }
