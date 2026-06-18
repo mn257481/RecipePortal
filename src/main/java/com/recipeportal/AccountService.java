@@ -25,4 +25,16 @@ public class AccountService {
         account.setPassword(newPassword);
         return true;
     }
+    public boolean changeEmail(Account account, String newEmail) {
+        if (account == null || newEmail == null) {
+            return false;
+        }
+
+        if (!newEmail.contains("@")) {
+            return false;
+        }
+
+        account.setEmail(newEmail);
+        return true;
+    }
 }
