@@ -3,9 +3,12 @@ package com.recipeportal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Prescription {
 
+    private final List<Integer> ratings = new ArrayList<>();
     private final String name;
     private final Map<String, Double> ingredients = new HashMap<>();
 
@@ -35,5 +38,28 @@ public class Prescription {
 
     public Map<String, Double> getIngredients() {
         return Collections.unmodifiableMap(ingredients);
+    }
+
+    public void addRating(int rating) {
+        if (rating < 1 || rating > 5) {
+            throw new IllegalArgumentException("Rating must be between 1 and 5.");
+        }
+
+        ratings.add(rating);
+    }
+
+    public double getAverageRating() {
+        if (ratings.isEmpty()) {
+            return 0.0;
+        }
+
+        return ratings.stream()
+                .mapToInt(Integer::intValue)
+                .average()
+                .orElse(0.0);
+    }
+
+    public int getNumberOfRatings() {
+        return ratings.size();
     }
 }
