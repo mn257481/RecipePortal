@@ -434,4 +434,81 @@ class PrescriptionManagerTests {
                 inventory.getIngredient("Vitamin C").getQuantity()
         );
     }
+
+    @Test
+    void shouldReturnAllPrescriptionsWhenCriteriaIsEmpty() {
+
+        PrescriptionManager manager = new PrescriptionManager();
+
+        manager.createPrescription("Cold");
+        manager.createPrescription("Pain");
+        manager.createPrescription("Heart");
+
+        SearchCriteria criteria = new SearchCriteria();
+
+        assertEquals(3, manager.search(criteria).size());
+    }
+
+    @Test
+    void shouldReturnEmptyListWhenNothingMatches() {
+
+        PrescriptionManager manager = new PrescriptionManager();
+
+        manager.createPrescription("Cold");
+
+        SearchCriteria criteria = new SearchCriteria()
+                .setName("Cancer");
+
+        assertTrue(manager.search(criteria).isEmpty());
+    }
+
+    @Test
+    void shouldSearchByIngredientUsingBackbone() {
+
+        PrescriptionManager manager = new PrescriptionManager();
+
+        manager.createPrescription("Pain");
+
+        manager.getPrescription("Pain")
+                .addIngredient("Ibuprofen", 2);
+
+        SearchCriteria criteria = new SearchCriteria()
+                .setIngredient("Ibuprofen");
+
+        assertEquals(1,
+                manager.search(criteria).size());
+    }
+
+    @Test
+    void shouldSearchByNameUsingBackbone() {
+
+        PrescriptionManager manager = new PrescriptionManager();
+
+        manager.createPrescription("Cold");
+        manager.createPrescription("Heart");
+
+        SearchCriteria criteria = new SearchCriteria()
+                .setName("Cold");
+
+        assertEquals(1,
+                manager.search(criteria).size());
+    }
+
+    @Test
+    void shouldMatchBothNameAndIngredient() {
+
+        PrescriptionManager manager = new PrescriptionManager();
+
+        manager.createPrescription("Cold");
+
+        manager.getPrescription("Cold")
+                .addIngredient("Paracetamol", 2);
+
+        SearchCriteria criteria = new SearchCriteria()
+                .setName("Cold")
+                .setIngredient("Paracetamol");
+
+        assertEquals(1,
+                manager.search(criteria).size());
+    }
 }
