@@ -181,4 +181,74 @@ class PrescriptionManagerTests {
 
         assertEquals(0.0, prescription.getAverageRating(), 0.001);
     }
+
+    @Test
+    void shouldRenamePrescription() {
+        PrescriptionManager manager = new PrescriptionManager();
+
+        manager.createPrescription("Cold");
+
+        manager.renamePrescription("Cold", "Flu");
+
+        assertFalse(manager.containsPrescription("Cold"));
+        assertTrue(manager.containsPrescription("Flu"));
+    }
+
+    @Test
+    void shouldUpdateIngredientQuantity() {
+        Prescription prescription = new Prescription("Pain");
+
+        prescription.addIngredient("Ibuprofen", 2);
+
+        prescription.updateIngredient("Ibuprofen", 5);
+
+        assertEquals(5.0,
+                prescription.getIngredients().get("Ibuprofen"));
+    }
+
+    @Test
+    void shouldRemoveIngredientFromPrescription() {
+        Prescription prescription = new Prescription("Pain");
+
+        prescription.addIngredient("Ibuprofen", 2);
+
+        prescription.removeIngredient("Ibuprofen");
+
+        assertFalse(
+                prescription.getIngredients().containsKey("Ibuprofen")
+        );
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingUnknownIngredient() {
+        Prescription prescription = new Prescription("Pain");
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> prescription.updateIngredient("Vitamin C", 5)
+        );
+    }
+
+    @Test
+    void shouldThrowExceptionWhenRemovingUnknownIngredient() {
+        Prescription prescription = new Prescription("Pain");
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> prescription.removeIngredient("Vitamin C")
+        );
+    }
+
+    @Test
+    void shouldThrowExceptionWhenRenamingToExistingPrescription() {
+        PrescriptionManager manager = new PrescriptionManager();
+
+        manager.createPrescription("A");
+        manager.createPrescription("B");
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> manager.renamePrescription("A", "B")
+        );
+    }
 }
