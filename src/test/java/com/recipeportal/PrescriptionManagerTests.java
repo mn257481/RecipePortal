@@ -124,4 +124,61 @@ class PrescriptionManagerTests {
         assertFalse(manager.containsPrescription("B"));
         assertTrue(manager.containsPrescription("C"));
     }
+
+    @Test
+    void shouldAddSingleRating() {
+        Prescription prescription = new Prescription("Pain Relief");
+
+        prescription.addRating(5);
+
+        assertEquals(1, prescription.getNumberOfRatings());
+        assertEquals(5.0, prescription.getAverageRating(), 0.001);
+    }
+
+    @Test
+    void shouldCalculateAverageRating() {
+        Prescription prescription = new Prescription("Cold");
+
+        prescription.addRating(5);
+        prescription.addRating(4);
+        prescription.addRating(3);
+
+        assertEquals(4.0, prescription.getAverageRating(), 0.001);
+    }
+
+    @Test
+    void shouldAcceptLowestRating() {
+        Prescription prescription = new Prescription("Flu");
+
+        prescription.addRating(1);
+
+        assertEquals(1.0, prescription.getAverageRating(), 0.001);
+    }
+
+    @Test
+    void shouldThrowExceptionForRatingBelowRange() {
+        Prescription prescription = new Prescription("Cold");
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> prescription.addRating(0)
+        );
+    }
+
+    @Test
+    void shouldThrowExceptionForRatingAboveRange() {
+        Prescription prescription = new Prescription("Cold");
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> prescription.addRating(6)
+        );
+    }
+
+    @Test
+    void shouldReturnZeroAverageWhenNoRatingsExist() {
+        Prescription prescription = new Prescription("Cold");
+
+        assertEquals(0.0, prescription.getAverageRating(), 0.001);
+    }
 }
