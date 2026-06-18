@@ -251,4 +251,77 @@ class PrescriptionManagerTests {
                 () -> manager.renamePrescription("A", "B")
         );
     }
+
+    @Test
+    void shouldMarkPrescriptionAsFavorite() {
+        PrescriptionManager manager = new PrescriptionManager();
+
+        manager.createPrescription("Pain Relief");
+
+        manager.favoritePrescription("Pain Relief");
+
+        assertTrue(
+                manager.getPrescription("Pain Relief").isFavorite()
+        );
+    }
+
+    @Test
+    void shouldRemovePrescriptionFromFavorites() {
+        PrescriptionManager manager = new PrescriptionManager();
+
+        manager.createPrescription("Pain Relief");
+
+        manager.favoritePrescription("Pain Relief");
+        manager.unfavoritePrescription("Pain Relief");
+
+        assertFalse(
+                manager.getPrescription("Pain Relief").isFavorite()
+        );
+    }
+
+    @Test
+    void shouldToggleFavoriteStatus() {
+        Prescription prescription = new Prescription("Cold");
+
+        assertFalse(prescription.isFavorite());
+
+        prescription.toggleFavorite();
+
+        assertTrue(prescription.isFavorite());
+
+        prescription.toggleFavorite();
+
+        assertFalse(prescription.isFavorite());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenFavoritingUnknownPrescription() {
+        PrescriptionManager manager = new PrescriptionManager();
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> manager.favoritePrescription("Unknown")
+        );
+    }
+
+    @Test
+    void shouldThrowExceptionWhenRemovingFavoriteFromUnknownPrescription() {
+        PrescriptionManager manager = new PrescriptionManager();
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> manager.unfavoritePrescription("Unknown")
+        );
+    }
+
+    @Test
+    void shouldKeepFavoriteStatusAfterRating() {
+        Prescription prescription = new Prescription("Pain");
+
+        prescription.markAsFavorite();
+        prescription.addRating(5);
+
+        assertTrue(prescription.isFavorite());
+        assertEquals(5.0, prescription.getAverageRating(), 0.001);
+    }
 }
