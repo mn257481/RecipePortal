@@ -11,6 +11,7 @@ public class Prescription {
     private final List<Integer> ratings = new ArrayList<>();
     private String name;
     private final Map<String, Double> ingredients = new HashMap<>();
+    private boolean favorite;
 
     public Prescription(String name) {
         if (name == null || name.isBlank()) {
@@ -89,5 +90,21 @@ public class Prescription {
         }
 
         ingredients.remove(ingredientName);
+    }
+
+    public void markAsFavorite() {
+        favorite = true;
+    }
+
+    public void removeFromFavorites() {
+        favorite = false;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void toggleFavorite() {
+        favorite = !favorite;
     }
 }
